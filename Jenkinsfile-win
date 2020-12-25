@@ -1,0 +1,24 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('clean') {
+            steps {
+                echo 'cleaning..'
+		bat 'mvn clean'
+            }
+        }
+        stage('Package') {
+            steps {
+                echo 'Testing..'
+		bat 'mvn package'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying....'
+                deploy adapters: [tomcat8(credentialsId: '7c7f0fc4-b2df-4edc-bbee-f795416dcace', path: '', url: 'http://localhost:9999/')], contextPath: 'weguidepipeline', onFailure: false, war: '**/*.war'
+            }
+        }
+    }
+}
